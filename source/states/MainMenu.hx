@@ -70,6 +70,7 @@ class MainMenu extends FlxState
 			{
 				menuShowing = true;
 				globalState.controllerId = FlxG.gamepads.firstActive.id;
+				globalState.isUsingController = true;
 				remove(startText1);
 				remove(startText2);
 				generateMenu();
