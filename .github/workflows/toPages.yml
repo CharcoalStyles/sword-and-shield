@@ -22,6 +22,7 @@ jobs:
           haxelib install lime 
           haxelib install openfl 
           haxelib install flixel
+          haxelib install flixel-ui
           haxelib install flixel-addons
           haxelib git csHxUtils https://github.com/CharcoalStyles/csHxUtils.git
 
