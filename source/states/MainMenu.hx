@@ -1,14 +1,14 @@
 package states;
 
+import csHxUtils.entities.CsMenu;
+import csHxUtils.entities.SplitText;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.math.FlxPoint;
 import flixel.text.FlxText.FlxTextAlign;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
-import utils.CsMenu;
 import utils.GlobalState;
-import utils.SplitText;
 
 class MainMenu extends FlxState
 {
@@ -50,7 +50,7 @@ class MainMenu extends FlxState
 
 		FlxG.gamepads.deviceConnected.addOnce((gp) ->
 		{
-      menuShowing = true;
+			menuShowing = true;
 			globalState.controllerId = gp.id;
 			remove(startText1);
 			remove(startText2);
@@ -68,7 +68,7 @@ class MainMenu extends FlxState
 		{
 			if (FlxG.gamepads.firstActive.justPressed.ANY)
 			{
-        menuShowing = true;
+				menuShowing = true;
 				globalState.controllerId = FlxG.gamepads.firstActive.id;
 				remove(startText1);
 				remove(startText2);

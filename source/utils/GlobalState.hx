@@ -1,9 +1,9 @@
 package utils;
 
-import entities.effects.CsEmitter;
+import csHxUtils.Observer.FloatObservable;
+import csHxUtils.Observer.IntObservable;
+import csHxUtils.entities.CsEmitter;
 import flixel.FlxBasic;
-import utils.Observer.FloatObservable;
-import utils.Observer.IntObservable;
 
 
 class GlobalState extends FlxBasic
