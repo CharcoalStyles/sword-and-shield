@@ -10338,6 +10338,98 @@ csHxUtils_entities_SplitText.prototype = $extend(flixel_group_FlxTypedGroup.prot
 	,__class__: csHxUtils_entities_SplitText
 	,__properties__: $extend(flixel_group_FlxTypedGroup.prototype.__properties__,{set_borderStyle:"set_borderStyle",set_borderQuality:"set_borderQuality",set_borderSize:"set_borderSize",set_borderColor:"set_borderColor",set_alpha:"set_alpha",set_color:"set_color",get_rect:"get_rect",set_y:"set_y",set_x:"set_x"})
 });
+var entities_Player = function() {
+	this.globalState = flixel_FlxG.plugins.get(utils_GlobalState);
+	flixel_group_FlxTypedGroup.call(this);
+	var t1 = new flixel_text_FlxText(0,0,0,"Left Stick to move");
+	t1.setFormat(null,16,-1,"left",flixel_text_FlxTextBorderStyle.OUTLINE,-16777216);
+	t1.set_x((flixel_FlxG.width - t1.get_width()) / 2);
+	t1.set_y(32);
+	this.add(t1);
+	var t2 = new flixel_text_FlxText(0,0,0,"Right Stick to attack with sword");
+	t2.setFormat(null,16,-1,"right",flixel_text_FlxTextBorderStyle.OUTLINE,-16777216);
+	t2.set_x((flixel_FlxG.width - t2.get_width()) / 2);
+	t2.set_y(64);
+	this.add(t2);
+	this.player = new flixel_FlxSprite(0,0);
+	this.player.makeGraphic(64,64,-65536);
+	var _this = this.player;
+	if(17 == 1 || 17 == 17) {
+		_this.set_x((flixel_FlxG.width - _this.get_width()) / 2);
+	}
+	if(17 == 16 || 17 == 17) {
+		_this.set_y((flixel_FlxG.height - _this.get_height()) / 2);
+	}
+	this.add(this.player);
+	this.add(this.player);
+	this.sword = new flixel_FlxSprite(0,0);
+	this.sword.makeGraphic(8,96,-1);
+	var this1 = this.sword.origin;
+	var x = 4;
+	var y = 96;
+	if(y == null) {
+		y = 0;
+	}
+	if(x == null) {
+		x = 0;
+	}
+	this1.set_x(x);
+	this1.set_y(y);
+	this.add(this.sword);
+};
+$hxClasses["entities.Player"] = entities_Player;
+entities_Player.__name__ = "entities.Player";
+entities_Player.__super__ = flixel_group_FlxTypedGroup;
+entities_Player.prototype = $extend(flixel_group_FlxTypedGroup.prototype,{
+	update: function(elapsed) {
+		flixel_group_FlxTypedGroup.prototype.update.call(this,elapsed);
+		var gamepad = flixel_FlxG.gamepads._activeGamepads[this.globalState.controllerId];
+		if(gamepad != null) {
+			var _this = gamepad.analog.value.gamepad;
+			var playerStickX = _this.getAnalogXAxisValue(_this.mapping.getAnalogStick(19));
+			var _this = gamepad.analog.value.gamepad;
+			var playerStickY = _this.getYAxisRaw(_this.mapping.getAnalogStick(19));
+			this.player.velocity.set_x(playerStickX * 250);
+			this.player.velocity.set_y(playerStickY * 250);
+			var playerAngle = Math.atan2(playerStickX,playerStickY * -1);
+			this.player.set_angle(playerAngle * 180 / Math.PI);
+			var _this = gamepad.analog.value.gamepad;
+			var swordStickX = _this.getAnalogXAxisValue(_this.mapping.getAnalogStick(20));
+			var _this = gamepad.analog.value.gamepad;
+			var swordStickY = _this.getYAxisRaw(_this.mapping.getAnalogStick(20));
+			var swordAngle = Math.atan2(swordStickX,swordStickY * -1);
+			this.sword.set_angle(swordAngle * 180 / Math.PI);
+			var x = swordStickX;
+			var y = swordStickY;
+			if(y == null) {
+				y = 0;
+			}
+			if(x == null) {
+				x = 0;
+			}
+			var x1 = x;
+			var y1 = y;
+			if(y1 == null) {
+				y1 = 0;
+			}
+			if(x1 == null) {
+				x1 = 0;
+			}
+			var point = flixel_math_FlxBasePoint.pool.get().set(x1,y1);
+			point._inPool = false;
+			var this1 = point;
+			var swordLength = Math.sqrt(this1.x * this1.x + this1.y * this1.y);
+			if(swordLength > 0.5) {
+				this.sword.scale.set_y(Math.min(1,swordLength));
+			} else {
+				this.sword.scale.set_y(0);
+			}
+		}
+		this.sword.set_x(this.player.x + this.player.get_width() / 2 - this.sword.get_width() / 2);
+		this.sword.set_y(this.player.y - this.player.get_height() / 2 - (this.sword.get_height() - this.player.get_height()));
+	}
+	,__class__: entities_Player
+});
 var flixel_math_FlxBasePoint = function(x,y) {
 	if(y == null) {
 		y = 0;
@@ -71411,7 +71503,7 @@ var lime_utils_AssetCache = function() {
 	this.audio = new haxe_ds_StringMap();
 	this.font = new haxe_ds_StringMap();
 	this.image = new haxe_ds_StringMap();
-	this.version = 837617;
+	this.version = 270801;
 };
 $hxClasses["lime.utils.AssetCache"] = lime_utils_AssetCache;
 lime_utils_AssetCache.__name__ = "lime.utils.AssetCache";
@@ -118938,6 +119030,7 @@ states_MainMenu.prototype = $extend(flixel_FlxState.prototype,{
 			if(flixel_FlxG.gamepads.firstActive.justPressed.get_ANY()) {
 				this.menuShowing = true;
 				this.globalState.controllerId = flixel_FlxG.gamepads.firstActive.id;
+				this.globalState.isUsingController = true;
 				this.remove(this.startText1);
 				this.remove(this.startText2);
 				this.generateMenu();
@@ -118989,22 +119082,8 @@ states_PlayState.prototype = $extend(flixel_FlxState.prototype,{
 	create: function() {
 		flixel_FlxState.prototype.create.call(this);
 		this.globalState = flixel_FlxG.plugins.get(utils_GlobalState);
-		this.player = new flixel_FlxSprite();
-		this.player.makeGraphic(64,64,-65536);
-		var _this = this.player;
-		if(17 == 1 || 17 == 17) {
-			_this.set_x((flixel_FlxG.width - _this.get_width()) / 2);
-		}
-		if(17 == 16 || 17 == 17) {
-			_this.set_y((flixel_FlxG.height - _this.get_height()) / 2);
-		}
+		this.player = new entities_Player();
 		this.add(this.player);
-	}
-	,update: function(elapsed) {
-		flixel_FlxState.prototype.update.call(this,elapsed);
-		flixel_FlxG.log.advanced("gamepads.firstActive: " + Std.string(flixel_FlxG.gamepads.firstActive),flixel_system_debug_log_LogStyle.NORMAL);
-		this.player.set_x(flixel_FlxG.mouse.screenX);
-		this.player.set_y(flixel_FlxG.mouse.screenY);
 	}
 	,__class__: states_PlayState
 });
